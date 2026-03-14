@@ -1,3 +1,4 @@
 streamlit
 mistralai==1.2.5
 python-dotenv
+prometheus-client

@@ -1,8 +1,27 @@
 # CI/CD test
 import streamlit as st
 import os
+import threading
 from dotenv import load_dotenv
 from mistralai import Mistral
+from prometheus_client import start_http_server, Counter, Histogram
+import time
+
+# Start Prometheus metrics server on port 8000
+def start_metrics_server():
+    start_http_server(8000)
+
+threading.Thread(target=start_metrics_server, daemon=True).start()
+
+# Define metrics (safe for Streamlit reruns)
+from prometheus_client import REGISTRY
+
+if 'chatbot_requests_total' not in REGISTRY._names_to_collectors:
+    REQUEST_COUNT = Counter('chatbot_requests_total', 'Total chat requests')
+    RESPONSE_TIME = Histogram('chatbot_response_seconds', 'Response time in seconds')
+else:
+    REQUEST_COUNT = REGISTRY._names_to_collectors['chatbot_requests_total']
+    RESPONSE_TIME = REGISTRY._names_to_collectors['chatbot_response_seconds']
 
 # Load environment variables from .env file
 load_dotenv()
@@ -98,6 +117,9 @@ for message in st.session_state.messages:
 
 # --- Handle User Input ---
 if prompt := st.chat_input("Type your message here..."):
+    # Increment request counter
+    REQUEST_COUNT.inc()
+
     # Add user message to history
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user", avatar="🧑‍💻"):
@@ -107,6 +129,7 @@ if prompt := st.chat_input("Type your message here..."):
     with st.chat_message("assistant", avatar="🤖"):
         with st.spinner("Thinking..."):
             try:
+                start = time.time()
                 response = client.chat.complete(
                     model=MODEL,
                     messages=[
@@ -114,6 +137,7 @@ if prompt := st.chat_input("Type your message here..."):
                         for m in st.session_state.messages
                     ],
                 )
+                RESPONSE_TIME.observe(time.time() - start)
                 assistant_reply = response.choices[0].message.content
             except Exception as e:
                 assistant_reply = f"❌ Error: {str(e)}"
