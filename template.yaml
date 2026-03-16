@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  ChatbotFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: app.lambda_handler
+      Runtime: python3.11
+      Timeout: 60
+      Environment:
+        Variables:
+          MISTRAL_API_KEY: Your_api_key_here
+      Events:
+        ChatbotApi:
+          Type: Api
+          Properties:
+            Path: /chat
+            Method: post
