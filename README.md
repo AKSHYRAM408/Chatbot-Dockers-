@@ -36,6 +36,7 @@
 
 ## ✨ Features
 
+
 - 💬 **Conversational AI** — Multi-turn chat powered by Mistral AI (`mistral-large-latest`)
 - 🎨 **Polished UI** — Custom-styled Streamlit interface with gradient headers, rounded chat bubbles, and modern typography (Inter font)
 - 🐳 **Dockerized** — Fully containerized with health checks and optimized layer caching
