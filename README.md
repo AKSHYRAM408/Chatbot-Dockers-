@@ -154,6 +154,7 @@ docker compose up --build
 
 ### 🐳 Docker (Railway / Any Cloud)
 
+
 ```bash
 docker build -t chatbot .
 docker run -p 8501:8501 --env-file .env chatbot
