@@ -91,7 +91,6 @@ st.markdown("""
 
 st.divider()
 
-# --- Mistral Client Setup ---
 api_key = os.getenv("MISTRAL_API_KEY")
 
 if not api_key:
@@ -101,7 +100,6 @@ if not api_key:
 client = Mistral(api_key=api_key)
 MODEL = "mistral-large-latest"
 
-# --- Session State for Chat History ---
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {
@@ -116,7 +114,6 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"], avatar=avatar):
         st.markdown(message["content"])
 
-# --- Handle User Input ---
 if prompt := st.chat_input("Type your message here..."):
     # Increment request counter
     REQUEST_COUNT.inc()
