@@ -8,13 +8,11 @@ from prometheus_client import start_http_server, Counter, Histogram
 import time
 
 
-# Start Prometheus metrics server on port 8000
 def start_metrics_server():
     start_http_server(8000)
 
 threading.Thread(target=start_metrics_server, daemon=True).start()
 
-# Define metrics (safe for Streamlit reruns)
 from prometheus_client import REGISTRY
 
 if 'chatbot_requests_total' not in REGISTRY._names_to_collectors:
