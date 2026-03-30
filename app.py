@@ -6,8 +6,6 @@ from dotenv import load_dotenv
 from mistralai import Mistral
 from prometheus_client import start_http_server, Counter, Histogram
 import time
-
-
 def start_metrics_server():
     start_http_server(8000)
 
