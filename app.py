@@ -1,4 +1,4 @@
-# CI/CD test
+#CI/CD pipelines
 import streamlit as st
 import os
 import threading
